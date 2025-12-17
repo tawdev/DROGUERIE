@@ -1,0 +1,14 @@
+# Protection des fichiers sensibles
+<FilesMatch "^(config|includes|sql)">
+    Order Deny,Allow
+    Deny from all
+</FilesMatch>
+
+# Activer le réécriture d'URL (optionnel)
+RewriteEngine On
+
+# Rediriger vers index.php si le fichier n'existe pas
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([^\.]+)$ $1.php [NC,L]
+

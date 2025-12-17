@@ -1,0 +1,105 @@
+<?php
+/**
+ * Page À propos
+ */
+require_once 'config/config.php';
+require_once 'includes/functions.php';
+
+$page_title = 'À propos';
+
+include 'includes/header.php';
+?>
+
+<section class="page-header">
+    <div class="container">
+        <h1>À propos de nous</h1>
+        <p>Découvrez notre histoire et nos valeurs</p>
+    </div>
+</section>
+
+<section class="about-section">
+    <div class="container">
+        <div class="about-content">
+            <div class="about-text">
+                <h2>Notre histoire</h2>
+                <p>
+                    Droguerie Maroc est née de la passion pour offrir aux familles marocaines 
+                    un accès facile et rapide à des produits de qualité pour leur maison et leur hygiène. 
+                    Fondée avec l'ambition de moderniser l'expérience d'achat de produits de droguerie, 
+                    nous avons créé une plateforme en ligne qui combine commodité, qualité et service client exceptionnel.
+                </p>
+                <p>
+                    Depuis nos débuts, nous nous engageons à proposer une large gamme de produits 
+                    soigneusement sélectionnés, allant des produits d'entretien ménager aux articles 
+                    d'hygiène personnelle, en passant par les accessoires de beauté et bien plus encore.
+                </p>
+            </div>
+            
+            <div class="about-features">
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Notre mission</h3>
+                    <p>
+                        Faciliter l'accès aux produits de droguerie de qualité pour tous les Marocains, 
+                        en offrant un service en ligne pratique, fiable et accessible.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">⭐</div>
+                    <h3>Nos valeurs</h3>
+                    <p>
+                        Qualité, transparence, service client et engagement envers la satisfaction 
+                        de nos clients sont au cœur de tout ce que nous faisons.
+                    </p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🚀</div>
+                    <h3>Notre vision</h3>
+                    <p>
+                        Devenir la référence en matière de droguerie en ligne au Maroc, 
+                        en continuant à innover et à améliorer l'expérience client.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="about-why">
+                <h2>Pourquoi nous choisir ?</h2>
+                <div class="why-list">
+                    <div class="why-item">
+                        <span class="why-icon">✓</span>
+                        <div>
+                            <h4>Produits de qualité</h4>
+                            <p>Nous sélectionnons rigoureusement nos produits pour garantir leur qualité et leur efficacité.</p>
+                        </div>
+                    </div>
+                    <div class="why-item">
+                        <span class="why-icon">✓</span>
+                        <div>
+                            <h4>Livraison rapide</h4>
+                            <p>Service de livraison efficace pour vous faire recevoir vos commandes dans les meilleurs délais.</p>
+                        </div>
+                    </div>
+                    <div class="why-item">
+                        <span class="why-icon">✓</span>
+                        <div>
+                            <h4>Prix compétitifs</h4>
+                            <p>Des prix attractifs et des promotions régulières pour vous offrir le meilleur rapport qualité-prix.</p>
+                        </div>
+                    </div>
+                    <div class="why-item">
+                        <span class="why-icon">✓</span>
+                        <div>
+                            <h4>Service client dédié</h4>
+                            <p>Une équipe à votre écoute pour répondre à toutes vos questions et vous accompagner.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<?php include 'includes/footer.php'; ?>
+
