@@ -31,6 +31,9 @@ include 'includes/header.php';
 
 <section class="page-header">
     <div class="container">
+        <a href="<?php echo $categorie_id ? baseUrl('catalogue.php') : baseUrl(); ?>" class="btn-back">
+            <span class="back-icon">←</span> <?php echo $categorie_id ? 'Retour au catalogue' : 'Retour à l\'accueil'; ?>
+        </a>
         <h1>
             <?php 
             if ($en_promotion) {
@@ -145,46 +148,20 @@ include 'includes/header.php';
                             </a>
                         </div>
                         <div class="product-info">
-                            <div class="product-header">
-                                <h3><a href="<?php echo baseUrl('produit.php?id=' . $produit['id']); ?>"><?php echo htmlspecialchars($produit['nom']); ?></a></h3>
-                                <p class="product-category"><?php echo htmlspecialchars($produit['categorie_nom']); ?></p>
-                            </div>
-                            
-                            <?php if ($produit['marque']): ?>
-                                <div class="product-brand">
-                                    <span class="brand-label">Marque:</span>
-                                    <span class="brand-name"><?php echo htmlspecialchars($produit['marque']); ?></span>
-                                </div>
-                            <?php endif; ?>
+                            <h3 class="product-name">
+                                <a href="<?php echo baseUrl('produit.php?id=' . $produit['id']); ?>">
+                                    <?php echo htmlspecialchars($produit['nom']); ?>
+                                </a>
+                            </h3>
                             
                             <div class="product-price">
                                 <?php if ($produit['en_promotion'] && $produit['prix_promotion']): ?>
-                                    <div class="price-wrapper">
+                                    <div class="price-container">
                                         <span class="price-old"><?php echo formatPrice($produit['prix']); ?></span>
                                         <span class="price-new"><?php echo formatPrice($produit['prix_promotion']); ?></span>
                                     </div>
-                                    <?php 
-                                    $reduction = round((($produit['prix'] - $produit['prix_promotion']) / $produit['prix']) * 100);
-                                    if ($reduction > 0):
-                                    ?>
-                                        <span class="price-discount">-<?php echo $reduction; ?>%</span>
-                                    <?php endif; ?>
                                 <?php else: ?>
                                     <span class="price"><?php echo formatPrice($produit['prix']); ?></span>
-                                <?php endif; ?>
-                            </div>
-                            
-                            <div class="product-stock">
-                                <?php if ($produit['stock'] > 0): ?>
-                                    <span class="stock-available">
-                                        <span class="stock-icon">✓</span>
-                                        En stock (<?php echo $produit['stock']; ?>)
-                                    </span>
-                                <?php else: ?>
-                                    <span class="stock-unavailable">
-                                        <span class="stock-icon">✗</span>
-                                        Rupture de stock
-                                    </span>
                                 <?php endif; ?>
                             </div>
                             

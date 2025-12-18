@@ -54,6 +54,9 @@ include 'includes/header.php';
 
 <section class="page-header">
     <div class="container">
+        <a href="javascript:history.back()" class="btn-back">
+            <span class="back-icon">←</span> Retour
+        </a>
         <h1>Mon Panier</h1>
         <p>Vérifiez vos articles avant de passer commande</p>
     </div>

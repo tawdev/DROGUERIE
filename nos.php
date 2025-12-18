@@ -12,6 +12,9 @@ include 'includes/header.php';
 
 <section class="page-header">
     <div class="container">
+        <a href="<?php echo baseUrl(); ?>" class="btn-back">
+            <span class="back-icon">←</span> Retour à l'accueil
+        </a>
         <h1>Nos services</h1>
         <p>Découvrez tout ce que nous vous offrons</p>
     </div>

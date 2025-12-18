@@ -84,15 +84,26 @@ include 'includes/header.php';
 
 <section class="order-section">
     <div class="container">
+        <?php if (!$success): ?>
+            <a href="<?php echo baseUrl('panier.php'); ?>" class="btn-back">
+                <span class="back-icon">←</span> Retour au panier
+            </a>
+        <?php endif; ?>
         <h1>Passer la commande</h1>
         
         <?php if ($success): ?>
-            <div class="alert alert-success">
+            <div class="order-confirmation">
+                <div class="order-confirmation-icon"></div>
                 <h2>Commande confirmée !</h2>
                 <p>Votre commande a été enregistrée avec succès.</p>
-                <p><strong>Numéro de commande: #<?php echo $commande_id; ?></strong></p>
-                <p>Nous vous contacterons dans les plus brefs délais pour confirmer votre commande et organiser la livraison.</p>
-                <a href="<?php echo baseUrl(); ?>" class="btn btn-primary">Retour à l'accueil</a>
+                <div class="order-number">Numéro de commande: #<?php echo $commande_id; ?></div>
+                <div class="order-info">
+                    <p>Nous vous contacterons dans les plus brefs délais pour confirmer votre commande et organiser la livraison.</p>
+                </div>
+                <div class="order-confirmation-actions">
+                    <a href="<?php echo baseUrl(); ?>" class="btn btn-primary">Retour à l'accueil</a>
+                    <a href="<?php echo baseUrl('catalogue.php'); ?>" class="btn-back">← Retour au catalogue</a>
+                </div>
             </div>
         <?php else: ?>
             <?php if (!empty($errors)): ?>

@@ -56,6 +56,9 @@ include 'includes/header.php';
 
 <section class="page-header">
     <div class="container">
+        <a href="<?php echo baseUrl(); ?>" class="btn-back">
+            <span class="back-icon">←</span> Retour à l'accueil
+        </a>
         <h1>Contactez-nous</h1>
         <p>Nous sommes là pour répondre à toutes vos questions</p>
     </div>
@@ -65,50 +68,81 @@ include 'includes/header.php';
     <div class="container">
         <div class="contact-wrapper">
             <div class="contact-info">
-                <h2>Informations de contact</h2>
-                <div class="contact-item">
-                    <div class="contact-icon">📍</div>
-                    <div>
-                        <h3>Adresse</h3>
-                        <p>Casablanca, Maroc</p>
+                <div class="contact-info-header">
+                    <h2>Informations de contact</h2>
+                    <p>N'hésitez pas à nous contacter pour toute question ou demande</p>
+                </div>
+                
+                <div class="contact-items-list">
+                    <div class="contact-item">
+                        <div class="contact-icon-wrapper">
+                            <div class="contact-icon">📍</div>
+                        </div>
+                        <div class="contact-item-content">
+                            <h3>Adresse</h3>
+                            <p>Casablanca, Maroc</p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <div class="contact-icon-wrapper">
+                            <div class="contact-icon">📞</div>
+                        </div>
+                        <div class="contact-item-content">
+                            <h3>Téléphone</h3>
+                            <p><a href="tel:+212XXXXXXXXX">+212 XXX XXX XXX</a></p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <div class="contact-icon-wrapper">
+                            <div class="contact-icon">✉️</div>
+                        </div>
+                        <div class="contact-item-content">
+                            <h3>Email</h3>
+                            <p><a href="mailto:contact@droguerie.ma">contact@droguerie.ma</a></p>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <div class="contact-icon-wrapper">
+                            <div class="contact-icon">🕒</div>
+                        </div>
+                        <div class="contact-item-content">
+                            <h3>Heures d'ouverture</h3>
+                            <p>Lundi - Vendredi: <strong>9h00 - 18h00</strong></p>
+                            <p>Samedi: <strong>9h00 - 13h00</strong></p>
+                        </div>
                     </div>
                 </div>
-                <div class="contact-item">
-                    <div class="contact-icon">📞</div>
-                    <div>
-                        <h3>Téléphone</h3>
-                        <p>+212 XXX XXX XXX</p>
-                    </div>
-                </div>
-                <div class="contact-item">
-                    <div class="contact-icon">✉️</div>
-                    <div>
-                        <h3>Email</h3>
-                        <p>contact@droguerie.ma</p>
-                    </div>
-                </div>
-                <div class="contact-item">
-                    <div class="contact-icon">🕒</div>
-                    <div>
-                        <h3>Heures d'ouverture</h3>
-                        <p>Lundi - Vendredi: 9h00 - 18h00</p>
-                        <p>Samedi: 9h00 - 13h00</p>
+                
+                <div class="contact-social">
+                    <h3>Suivez-nous</h3>
+                    <div class="social-links">
+                        <a href="#" class="social-link" title="Facebook">📘</a>
+                        <a href="#" class="social-link" title="Instagram">📷</a>
+                        <a href="#" class="social-link" title="WhatsApp">💬</a>
                     </div>
                 </div>
             </div>
             
             <div class="contact-form-wrapper">
-                <h2>Envoyez-nous un message</h2>
+                <div class="form-header">
+                    <h2>Envoyez-nous un message</h2>
+                    <p>Remplissez le formulaire ci-dessous et nous vous répondrons rapidement</p>
+                </div>
                 
                 <?php if ($message_success): ?>
                     <div class="alert alert-success">
-                        <?php echo $message_success; ?>
+                        <span class="alert-icon">✓</span>
+                        <span><?php echo $message_success; ?></span>
                     </div>
                 <?php endif; ?>
                 
                 <?php if ($message_error): ?>
                     <div class="alert alert-error">
-                        <?php echo $message_error; ?>
+                        <span class="alert-icon">✗</span>
+                        <span><?php echo $message_error; ?></span>
                     </div>
                 <?php endif; ?>
                 

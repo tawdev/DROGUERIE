@@ -439,3 +439,70 @@
     }
 }
 
+/* Styles pour les alertes */
+.alert {
+    padding: 1.2rem 1.5rem;
+    border-radius: var(--border-radius);
+    margin-bottom: 1.5rem;
+    border-left: 4px solid;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.alert-success {
+    background: #d4edda;
+    color: #155724;
+    border-color: #27ae60;
+}
+
+.alert-error {
+    background: #f8d7da;
+    color: #721c24;
+    border-color: #e74c3c;
+}
+
+.alert-warning {
+    background: #fff3cd;
+    color: #856404;
+    border-color: #f39c12;
+}
+
+.alert-info {
+    background: #d1ecf1;
+    color: #0c5460;
+    border-color: #bee5eb;
+}
+
+.alert h3 {
+    margin-bottom: 0.75rem;
+    font-size: 1.1rem;
+}
+
+.alert ul {
+    margin-left: 1.5rem;
+    margin-top: 0.75rem;
+}
+
+.alert ul li {
+    margin-bottom: 0.5rem;
+}
+
+.alert p {
+    margin-bottom: 0.5rem;
+}
+
+.alert small {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+

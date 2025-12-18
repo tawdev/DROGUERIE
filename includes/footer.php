@@ -24,7 +24,7 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; <?php echo date('Y'); ?> <?php echo SITE_NAME; ?>. Tous droits réservés.</p>
+                <p>&copy; 2025 C-Digital. Tous droits réservés.</p>
             </div>
         </div>
     </footer>

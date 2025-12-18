@@ -19,6 +19,7 @@
                     <li><a href="<?php echo baseUrl('admin/produits.php'); ?>">Produits</a></li>
                     <li><a href="<?php echo baseUrl('admin/produit_ajout.php'); ?>">Ajouter un produit</a></li>
                     <li><a href="<?php echo baseUrl('admin/categories.php'); ?>">Catégories</a></li>
+                    <li><a href="<?php echo baseUrl('admin/associer_images_categories.php'); ?>">Associer images catégories</a></li>
                     <li><a href="<?php echo baseUrl('admin/commandes.php'); ?>">Commandes</a></li>
                     <li><a href="<?php echo baseUrl('admin/messages_contact.php'); ?>">Messages de contact</a></li>
                     <li><a href="<?php echo baseUrl('admin/logout.php'); ?>">Déconnexion</a></li>
