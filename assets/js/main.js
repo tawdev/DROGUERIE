@@ -203,6 +203,374 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
+// Fonction réutilisable pour initialiser un slider de catégories
+function initCategoriesSlider(sliderId, prevBtnId, nextBtnId, dotsContainerId) {
+    const categoriesSlider = document.getElementById(sliderId);
+    if (!categoriesSlider) return;
+    
+    const track = categoriesSlider.querySelector('.categories-slider-track');
+    const slides = track.querySelectorAll('.category-card-slide');
+    const prevBtn = document.getElementById(prevBtnId);
+    const nextBtn = document.getElementById(nextBtnId);
+    const dotsContainer = document.getElementById(dotsContainerId);
+    
+    if (!track || slides.length === 0) return;
+    
+    let currentIndex = 0;
+    let slidesToShow = getSlidesToShow();
+    const totalSlides = slides.length;
+    let maxIndex = Math.max(0, totalSlides - slidesToShow);
+    let autoPlayInterval = null;
+    let isPaused = false;
+    
+    // متغيرات للتمرير اليدوي (drag/scroll)
+    let isDragging = false;
+    let startX = 0;
+    let scrollLeft = 0;
+    let startY = 0;
+    let isHorizontalScroll = false;
+    let lastTouchTime = 0;
+    
+    // Créer les dots - un dot par catégorie
+    if (dotsContainer) {
+        for (let i = 0; i < totalSlides; i++) {
+            const dot = document.createElement('span');
+            dot.className = 'slider-dot-category';
+            if (i === 0) dot.classList.add('active');
+            dot.addEventListener('click', () => {
+                goToSlide(i);
+                pauseAutoPlay();
+                resumeAutoPlay();
+            });
+            dotsContainer.appendChild(dot);
+        }
+    }
+    
+    function getSlidesToShow() {
+        const width = window.innerWidth;
+        if (width < 768) return 1;
+        if (width < 1024) return 2;
+        if (width < 1280) return 3;
+        return 4;
+    }
+    
+    function updateSlider() {
+        const slideWidth = slides[0].offsetWidth + 24; // width + gap
+        const translateX = -currentIndex * slideWidth;
+        track.style.transform = `translateX(${translateX}px)`;
+        
+        // Mettre à jour les dots - une dot par catégorie maintenant
+        if (dotsContainer) {
+            const dots = dotsContainer.querySelectorAll('.slider-dot-category');
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentIndex);
+            });
+        }
+        
+        // Gérer les boutons
+        if (prevBtn) prevBtn.style.opacity = currentIndex === 0 ? '0.5' : '1';
+        if (nextBtn) nextBtn.style.opacity = currentIndex >= totalSlides - 1 ? '0.5' : '1';
+    }
+    
+    function goToSlide(index) {
+        currentIndex = Math.max(0, Math.min(index, totalSlides - 1));
+        updateSlider();
+    }
+    
+    function nextSlide() {
+        if (currentIndex < totalSlides - 1) {
+            // Avancer d'une seule catégorie à la fois
+            currentIndex = currentIndex + 1;
+        } else {
+            // Retour au début si on est à la fin
+            currentIndex = 0;
+        }
+        updateSlider();
+    }
+    
+    function prevSlide() {
+        if (currentIndex > 0) {
+            // Reculer d'une seule catégorie à la fois
+            currentIndex = currentIndex - 1;
+        } else {
+            // Aller à la fin si on est au début
+            currentIndex = totalSlides - 1;
+        }
+        updateSlider();
+    }
+    
+    // Auto-play toutes les 1 seconde
+    function startAutoPlay() {
+        if (autoPlayInterval) clearInterval(autoPlayInterval);
+        autoPlayInterval = setInterval(() => {
+            if (!isPaused && totalSlides > 1) {
+                nextSlide();
+            }
+        }, 1000); // 1 seconde = 1000ms
+    }
+    
+    function pauseAutoPlay() {
+        isPaused = true;
+    }
+    
+    function resumeAutoPlay() {
+        isPaused = false;
+    }
+    
+    function stopAutoPlay() {
+        if (autoPlayInterval) {
+            clearInterval(autoPlayInterval);
+            autoPlayInterval = null;
+        }
+    }
+    
+    if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+            nextSlide();
+            pauseAutoPlay();
+            resumeAutoPlay();
+        });
+    }
+    
+    if (prevBtn) {
+        prevBtn.addEventListener('click', () => {
+            prevSlide();
+            pauseAutoPlay();
+            resumeAutoPlay();
+        });
+    }
+    
+    // Pause au survol
+    categoriesSlider.addEventListener('mouseenter', pauseAutoPlay);
+    categoriesSlider.addEventListener('mouseleave', resumeAutoPlay);
+    
+    // Gestion du redimensionnement
+    let resizeTimeout;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => {
+            const newSlidesToShow = getSlidesToShow();
+            if (newSlidesToShow !== slidesToShow) {
+                slidesToShow = newSlidesToShow;
+                maxIndex = Math.max(0, totalSlides - slidesToShow);
+                currentIndex = Math.min(currentIndex, maxIndex);
+                updateSlider();
+                stopAutoPlay();
+                startAutoPlay();
+            } else {
+                updateSlider();
+            }
+        }, 250);
+    });
+    
+    // Initialiser
+    updateSlider();
+    startAutoPlay();
+    
+    // Centrer la catégorie active si elle existe
+    if (document.querySelector('.category-card-slide.active')) {
+        const activeSlide = document.querySelector('.category-card-slide.active');
+        const activeIndex = Array.from(slides).indexOf(activeSlide);
+        if (activeIndex !== -1) {
+            currentIndex = activeIndex;
+            updateSlider();
+        }
+    }
+    
+    // Navigation au clavier
+    categoriesSlider.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') {
+            prevSlide();
+            pauseAutoPlay();
+            resumeAutoPlay();
+        }
+        if (e.key === 'ArrowRight') {
+            nextSlide();
+            pauseAutoPlay();
+            resumeAutoPlay();
+        }
+    });
+    
+    // ============================================
+    // نظام التمرير الأفقي فقط (Horizontal Scroll Only)
+    // ============================================
+    
+    // منع التمرير العمودي عند السحب
+    function handleTouchStart(e) {
+        if (e.touches.length === 1) {
+            // سحب بإصبع واحد
+            startX = e.touches[0].clientX;
+            startY = e.touches[0].clientY;
+            isDragging = true;
+            isHorizontalScroll = false;
+            pauseAutoPlay();
+            
+            // الحصول على موضع التمرير الحالي
+            scrollLeft = track.scrollLeft || 0;
+        } else if (e.touches.length === 2) {
+            // سحب بإصبعين - السماح بالتمرير الأفقي فقط
+            startX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+            startY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+            isDragging = true;
+            isHorizontalScroll = false;
+            pauseAutoPlay();
+        }
+        
+        lastTouchTime = Date.now();
+    }
+    
+    function handleTouchMove(e) {
+        if (!isDragging) return;
+        
+        if (e.touches.length === 1) {
+            const currentX = e.touches[0].clientX;
+            const currentY = e.touches[0].clientY;
+            const diffX = Math.abs(currentX - startX);
+            const diffY = Math.abs(currentY - startY);
+            
+            // تحديد اتجاه التمرير
+            if (!isHorizontalScroll && diffX > 5) {
+                isHorizontalScroll = true;
+            }
+            
+            // إذا كان التمرير أفقي، منع التمرير العمودي
+            if (isHorizontalScroll || diffX > diffY) {
+                e.preventDefault(); // منع التمرير العمودي
+                
+                const walk = (currentX - startX) * 1.5; // سرعة السحب
+                track.scrollLeft = scrollLeft - walk;
+            }
+        } else if (e.touches.length === 2) {
+            // سحب بإصبعين - تمرير أفقي فقط
+            const currentX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+            const currentY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+            const diffX = Math.abs(currentX - startX);
+            const diffY = Math.abs(currentY - startY);
+            
+            if (diffX > diffY) {
+                e.preventDefault(); // منع التمرير العمودي
+                isHorizontalScroll = true;
+                
+                const walk = (currentX - startX) * 1.5;
+                track.scrollLeft = scrollLeft - walk;
+            }
+        }
+    }
+    
+    function handleTouchEnd(e) {
+        if (!isDragging) return;
+        
+        isDragging = false;
+        isHorizontalScroll = false;
+        
+        // إعادة المزامنة مع currentIndex بعد السحب
+        const slideWidth = slides[0].offsetWidth + 24;
+        const newIndex = Math.round(-track.scrollLeft / slideWidth);
+        currentIndex = Math.max(0, Math.min(newIndex, totalSlides - 1));
+        updateSlider();
+        
+        resumeAutoPlay();
+    }
+    
+    // دعم السحب بالماوس (Desktop)
+    function handleMouseDown(e) {
+        isDragging = true;
+        startX = e.pageX - track.offsetLeft;
+        scrollLeft = track.scrollLeft;
+        pauseAutoPlay();
+        track.style.cursor = 'grabbing';
+        track.style.userSelect = 'none';
+    }
+    
+    function handleMouseMove(e) {
+        if (!isDragging) return;
+        e.preventDefault();
+        const x = e.pageX - track.offsetLeft;
+        const walk = (x - startX) * 1.5;
+        track.scrollLeft = scrollLeft - walk;
+    }
+    
+    function handleMouseUp() {
+        isDragging = false;
+        track.style.cursor = 'grab';
+        track.style.userSelect = '';
+        
+        // إعادة المزامنة
+        const slideWidth = slides[0].offsetWidth + 24;
+        const newIndex = Math.round(-track.scrollLeft / slideWidth);
+        currentIndex = Math.max(0, Math.min(newIndex, totalSlides - 1));
+        updateSlider();
+        
+        resumeAutoPlay();
+    }
+    
+    function handleMouseLeave() {
+        isDragging = false;
+        track.style.cursor = 'grab';
+        track.style.userSelect = '';
+    }
+    
+    // دعم عجلة الماوس للتمرير الأفقي
+    function handleWheel(e) {
+        // التحقق من أن التمرير أفقي (shift + wheel) أو تمرير أفقي مباشر
+        if (e.shiftKey || Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+            e.preventDefault();
+            track.scrollLeft += e.deltaX || e.deltaY;
+            
+            // تحديث currentIndex
+            const slideWidth = slides[0].offsetWidth + 24;
+            const newIndex = Math.round(-track.scrollLeft / slideWidth);
+            currentIndex = Math.max(0, Math.min(newIndex, totalSlides - 1));
+            updateSlider();
+        }
+    }
+    
+    // إضافة Event Listeners
+    track.addEventListener('touchstart', handleTouchStart, { passive: false });
+    track.addEventListener('touchmove', handleTouchMove, { passive: false });
+    track.addEventListener('touchend', handleTouchEnd, { passive: true });
+    track.addEventListener('touchcancel', handleTouchEnd, { passive: true });
+    
+    // دعم الماوس (Desktop)
+    track.addEventListener('mousedown', handleMouseDown);
+    track.addEventListener('mousemove', handleMouseMove);
+    track.addEventListener('mouseup', handleMouseUp);
+    track.addEventListener('mouseleave', handleMouseLeave);
+    
+    // دعم عجلة الماوس
+    track.addEventListener('wheel', handleWheel, { passive: false });
+    
+    // تحسين CSS للسحب
+    track.style.cursor = 'grab';
+    
+    // Nettoyer l'intervalle quand la page est cachée
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+            pauseAutoPlay();
+        } else {
+            resumeAutoPlay();
+        }
+    });
+}
+
+// Initialiser les sliders de catégories
+document.addEventListener('DOMContentLoaded', function() {
+    // Slider de la page catalogue
+    initCategoriesSlider('categoriesSlider', 'categoriesPrev', 'categoriesNext', 'categoriesDots');
+    
+    // Slider de la page d'accueil
+    initCategoriesSlider('categoriesSliderHome', 'categoriesPrevHome', 'categoriesNextHome', 'categoriesDotsHome');
+});
+
+// Initialiser les sliders de catégories
+document.addEventListener('DOMContentLoaded', function() {
+    // Slider de la page catalogue
+    initCategoriesSlider('categoriesSlider', 'categoriesPrev', 'categoriesNext', 'categoriesDots');
+    
+    // Slider de la page d'accueil
+    initCategoriesSlider('categoriesSliderHome', 'categoriesPrevHome', 'categoriesNextHome', 'categoriesDotsHome');
+});
+
 // Gestion de la quantité dans le panier
 function updateQuantity(produitId, change) {
     const input = document.getElementById('qty-' + produitId);

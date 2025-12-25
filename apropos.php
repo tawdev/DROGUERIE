@@ -40,10 +40,7 @@ include 'includes/header.php';
                     </p>
                 </div>
                 <div class="about-story-image">
-                    <div class="story-image-placeholder">
-                        <div class="image-icon">🏗️</div>
-                        <div class="image-text">Notre équipe</div>
-                    </div>
+                    <img src="<?php echo baseUrl('assets/image/Gemini_Generated_Image_amj98uamj98uamj9.png'); ?>" alt="Notre équipe et notre magasin" class="story-image">
                 </div>
             </div>
         </div>

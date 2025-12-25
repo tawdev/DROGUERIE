@@ -20,8 +20,8 @@ include 'includes/header.php';
     <div class="slider">
         <div class="slide active">
             <div class="slide-content">
-                <h2>Matériaux de construction & Quincaillerie</h2>
-                <p>Tout ce dont vous avez besoin pour vos projets de construction et rénovation</p>
+                <h2>Votre droguerie de confiance au Maroc</h2>
+                <p>Matériaux de construction, quincaillerie et outillage pour tous vos projets</p>
                 <div class="slide-buttons">
                     <a href="<?php echo baseUrl('catalogue.php'); ?>" class="btn btn-primary btn-large">Voir le catalogue</a>
                     <a href="<?php echo baseUrl('apropos.php'); ?>" class="btn btn-secondary btn-large">En savoir plus</a>
@@ -87,39 +87,47 @@ include 'includes/header.php';
     </div>
 </section>
 
-<section class="categories-section">
+<!-- Section Catégories en Slider -->
+<section class="categories-slider-section">
     <div class="container">
         <div class="section-header">
             <h2 class="section-title">Nos Catégories</h2>
             <p class="section-subtitle">Explorez notre large gamme de produits organisés par catégories</p>
         </div>
-        <div class="categories-grid">
-            <?php foreach ($categories as $categorie): 
-                $cat_produits = getProduits($categorie['id']);
-                $cat_count = count($cat_produits);
-            ?>
-                <div class="category-card">
-                    <a href="<?php echo baseUrl('catalogue.php?categorie=' . $categorie['id']); ?>">
-                        <div class="category-image">
-                            <?php if ($categorie['image']): ?>
-                                <img src="<?php echo baseUrl('uploads/' . $categorie['image']); ?>" alt="<?php echo htmlspecialchars($categorie['nom']); ?>">
-                            <?php else: ?>
-                                <div class="category-placeholder">
-                                    <span class="category-icon">📦</span>
+        <div class="categories-slider-wrapper">
+            <div class="categories-slider" id="categoriesSliderHome">
+                <div class="categories-slider-track">
+                    <?php foreach ($categories as $categorie): 
+                        $cat_produits = getProduits($categorie['id']);
+                        $cat_count = count($cat_produits);
+                    ?>
+                        <div class="category-card-slide">
+                            <a href="<?php echo baseUrl('catalogue.php?categorie=' . $categorie['id']); ?>" class="category-card-link">
+                                <div class="category-card-image">
+                                    <?php if ($categorie['image']): ?>
+                                        <img src="<?php echo baseUrl('uploads/' . $categorie['image']); ?>" alt="<?php echo htmlspecialchars($categorie['nom']); ?>">
+                                    <?php else: ?>
+                                        <div class="category-placeholder">
+                                            <span class="category-icon">📦</span>
+                                        </div>
+                                    <?php endif; ?>
+                                    <div class="category-overlay">
+                                        <span class="category-count"><?php echo $cat_count; ?> produit<?php echo $cat_count > 1 ? 's' : ''; ?></span>
+                                    </div>
                                 </div>
-                            <?php endif; ?>
-                            <div class="category-overlay">
-                                <span class="category-count"><?php echo $cat_count; ?> produit<?php echo $cat_count > 1 ? 's' : ''; ?></span>
-                            </div>
+                                <div class="category-card-content">
+                                    <h3><?php echo htmlspecialchars($categorie['nom']); ?></h3>
+                                    <p><?php echo htmlspecialchars($categorie['description'] ?? 'Découvrez nos produits'); ?></p>
+                                    <span class="category-link">Voir les produits →</span>
+                                </div>
+                            </a>
                         </div>
-                        <div class="category-content">
-                            <h3><?php echo htmlspecialchars($categorie['nom']); ?></h3>
-                            <p><?php echo htmlspecialchars($categorie['description'] ?? 'Découvrez nos produits'); ?></p>
-                            <span class="category-link">Voir les produits →</span>
-                        </div>
-                    </a>
+                    <?php endforeach; ?>
                 </div>
-            <?php endforeach; ?>
+            </div>
+            <button class="slider-nav-btn slider-prev" id="categoriesPrevHome" aria-label="Catégories précédentes">‹</button>
+            <button class="slider-nav-btn slider-next" id="categoriesNextHome" aria-label="Catégories suivantes">›</button>
+            <div class="slider-dots-categories" id="categoriesDotsHome"></div>
         </div>
     </div>
 </section>
@@ -149,15 +157,7 @@ include 'includes/header.php';
                     <div class="product-info">
                         <div class="product-header">
                             <h3><a href="<?php echo baseUrl('produit.php?id=' . $produit['id']); ?>"><?php echo htmlspecialchars($produit['nom']); ?></a></h3>
-                            <p class="product-category"><?php echo htmlspecialchars($produit['categorie_nom']); ?></p>
                         </div>
-                        
-                        <?php if ($produit['marque']): ?>
-                            <div class="product-brand">
-                                <span class="brand-label">Marque:</span>
-                                <span class="brand-name"><?php echo htmlspecialchars($produit['marque']); ?></span>
-                            </div>
-                        <?php endif; ?>
                         
                         <div class="product-price">
                             <?php if ($produit['en_promotion'] && $produit['prix_promotion']): ?>
@@ -173,20 +173,6 @@ include 'includes/header.php';
                                 <?php endif; ?>
                             <?php else: ?>
                                 <span class="price"><?php echo formatPrice($produit['prix']); ?></span>
-                            <?php endif; ?>
-                        </div>
-                        
-                        <div class="product-stock">
-                            <?php if ($produit['stock'] > 0): ?>
-                                <span class="stock-available">
-                                    <span class="stock-icon">✓</span>
-                                    En stock (<?php echo $produit['stock']; ?>)
-                                </span>
-                            <?php else: ?>
-                                <span class="stock-unavailable">
-                                    <span class="stock-icon">✗</span>
-                                    Rupture de stock
-                                </span>
                             <?php endif; ?>
                         </div>
                         

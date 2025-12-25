@@ -59,62 +59,92 @@ include 'includes/header.php';
     </div>
 </section>
 
+<!-- Section Catégories en Slider -->
+<section class="categories-slider-section">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Parcourir par catégorie</h2>
+            <p class="section-subtitle">Sélectionnez une catégorie pour découvrir nos produits</p>
+        </div>
+        <div class="categories-slider-wrapper">
+            <div class="categories-slider" id="categoriesSlider">
+                <div class="categories-slider-track">
+                    <div class="category-card-slide <?php echo !$categorie_id && !$en_promotion ? 'active' : ''; ?>">
+                        <a href="<?php echo baseUrl('catalogue.php'); ?>" class="category-card-link <?php echo !$categorie_id && !$en_promotion ? 'active' : ''; ?>">
+                            <div class="category-card-image">
+                                <div class="category-placeholder">
+                                    <span class="category-icon">📦</span>
+                                </div>
+                                <?php if (!$categorie_id && !$en_promotion): ?>
+                                    <div class="category-active-badge">✓ Actif</div>
+                                <?php endif; ?>
+                            </div>
+                            <div class="category-card-content">
+                                <h3>Tous les produits</h3>
+                                <p><?php echo $total_produits; ?> produit<?php echo $total_produits > 1 ? 's' : ''; ?></p>
+                                <span class="category-link">Voir tout →</span>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="category-card-slide <?php echo $en_promotion ? 'active' : ''; ?>">
+                        <a href="<?php echo baseUrl('catalogue.php?promotion=1'); ?>" class="category-card-link <?php echo $en_promotion ? 'active' : ''; ?>">
+                            <div class="category-card-image">
+                                <div class="category-placeholder promo">
+                                    <span class="category-icon">🔥</span>
+                                </div>
+                                <?php if ($en_promotion): ?>
+                                    <div class="category-active-badge">✓ Actif</div>
+                                <?php endif; ?>
+                            </div>
+                            <div class="category-card-content">
+                                <h3>Promotions</h3>
+                                <p><?php echo $total_promotions; ?> offre<?php echo $total_promotions > 1 ? 's' : ''; ?></p>
+                                <span class="category-link">Voir les promos →</span>
+                            </div>
+                        </a>
+                    </div>
+                    <?php foreach ($categories as $categorie): 
+                        $cat_produits = getProduits($categorie['id']);
+                        $cat_count = count($cat_produits);
+                        $isActive = ($categorie_id == $categorie['id']);
+                    ?>
+                        <div class="category-card-slide <?php echo $isActive ? 'active' : ''; ?>">
+                            <a href="<?php echo baseUrl('catalogue.php?categorie=' . $categorie['id']); ?>" class="category-card-link <?php echo $isActive ? 'active' : ''; ?>">
+                                <div class="category-card-image">
+                                    <?php if ($categorie['image']): ?>
+                                        <img src="<?php echo baseUrl('uploads/' . $categorie['image']); ?>" alt="<?php echo htmlspecialchars($categorie['nom']); ?>">
+                                    <?php else: ?>
+                                        <div class="category-placeholder">
+                                            <span class="category-icon">📋</span>
+                                        </div>
+                                    <?php endif; ?>
+                                    <div class="category-overlay">
+                                        <span class="category-count"><?php echo $cat_count; ?> produit<?php echo $cat_count > 1 ? 's' : ''; ?></span>
+                                    </div>
+                                    <?php if ($isActive): ?>
+                                        <div class="category-active-badge">✓ Actif</div>
+                                    <?php endif; ?>
+                                </div>
+                                <div class="category-card-content">
+                                    <h3><?php echo htmlspecialchars($categorie['nom']); ?></h3>
+                                    <p><?php echo htmlspecialchars($categorie['description'] ?? 'Découvrez nos produits'); ?></p>
+                                    <span class="category-link">Voir les produits →</span>
+                                </div>
+                            </a>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+            <button class="slider-nav-btn slider-prev" id="categoriesPrev" aria-label="Catégories précédentes">‹</button>
+            <button class="slider-nav-btn slider-next" id="categoriesNext" aria-label="Catégories suivantes">›</button>
+            <div class="slider-dots-categories" id="categoriesDots"></div>
+        </div>
+    </div>
+</section>
+
 <section class="catalogue-section">
     <div class="container">
         <div class="catalogue-layout">
-            <!-- Sidebar de filtres à gauche -->
-            <aside class="catalogue-sidebar">
-                <div class="sidebar-header">
-                    <h2>Filtres</h2>
-                    <button class="sidebar-toggle" id="sidebarToggle">☰</button>
-                </div>
-                
-                <div class="sidebar-content" id="sidebarContent">
-                    <div class="filter-group">
-                        <h3 class="filter-title">Catégories</h3>
-                        <ul class="filter-list">
-                            <li>
-                                <a href="<?php echo baseUrl('catalogue.php'); ?>" 
-                                   class="filter-link <?php echo !$categorie_id && !$en_promotion ? 'active' : ''; ?>">
-                                    <span class="filter-icon">📦</span>
-                                    <span>Tous les produits</span>
-                                    <span class="filter-count"><?php echo $total_produits; ?></span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="<?php echo baseUrl('catalogue.php?promotion=1'); ?>" 
-                                   class="filter-link <?php echo $en_promotion ? 'active' : ''; ?>">
-                                    <span class="filter-icon">🔥</span>
-                                    <span>Promotions</span>
-                                    <span class="filter-count"><?php echo $total_promotions; ?></span>
-                                </a>
-                            </li>
-                            <?php foreach ($categories as $cat): 
-                                $cat_produits = getProduits($cat['id']);
-                                $cat_count = count($cat_produits);
-                            ?>
-                                <li>
-                                    <a href="<?php echo baseUrl('catalogue.php?categorie=' . $cat['id']); ?>" 
-                                       class="filter-link <?php echo $categorie_id == $cat['id'] ? 'active' : ''; ?>">
-                                        <span class="filter-icon">📋</span>
-                                        <span><?php echo htmlspecialchars($cat['nom']); ?></span>
-                                        <span class="filter-count"><?php echo $cat_count; ?></span>
-                                    </a>
-                                </li>
-                            <?php endforeach; ?>
-                        </ul>
-                    </div>
-                    
-                    <div class="filter-group">
-                        <h3 class="filter-title">Informations</h3>
-                        <div class="filter-info">
-                            <p>Parcourez notre catalogue complet de matériaux de construction, quincaillerie et outillage.</p>
-                            <p>Tous nos produits sont disponibles en stock et livrés rapidement.</p>
-                        </div>
-                    </div>
-                </div>
-            </aside>
-
             <!-- Contenu principal -->
             <main class="catalogue-main">
                 <?php if (empty($produits)): ?>
